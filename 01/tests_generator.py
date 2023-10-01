@@ -1,38 +1,52 @@
-import unittest
 import io
-from generator import search_matches, generator
-
-
-class TestSearchMatches(unittest.TestCase):
-    def test_search_matches(self):
-        line = "this is a test line"
-        list_search = ["test", "line"]
-        self.assertEqual(search_matches(line, list_search), True)
+import unittest
+from generator import generator
 
 
 class TestGenerator(unittest.TestCase):
-    def setUp(self):
-        text_file = "this is a test file\nwith some words\nfor searching\n"
-        self.test_file = io.StringIO(text_file)
-        self.file_descriptor = open("text", "r", encoding="UTF-8")
-        self.file_descriptor.close()
-        self.file = "text"
+    def test_found(self):
+        file = io.StringIO('а Роза упала на лапу Азора')
+        gen = generator(file, ['роза'])
+        self.assertEqual(list(gen), ['а Роза упала на лапу Азора'])
 
-    def test_generator_with_file_name(self):
-        list_search = ["генератор", "файла", "слов"]
-        result = list(generator(self.file, list_search))
-        self.assertEqual(len(result), 6)
+    def test_found_several(self):
+        file = io.StringIO('а Роза упала на лапу Азора\nалая РОЗА\nАзор')
+        gen = generator(file, ['РоЗа'])
+        self.assertEqual(list(gen), ['а Роза упала на лапу Азора\n',
+                                     'алая РОЗА\n'])
 
-    def test_generator_with_file_descriptor(self):
-        list_search = ["слов"]
-        expected_result = \
-            ['набор слов разделенных пробелами знаков препинания нет\n',
-             'или файловый объект и список слов для поиска\n',
-             'где встретилось хотя бы одно из слов для поиска\n']
-        result = list(generator(self.file_descriptor.name, list_search))
-        self.assertEqual(len(result), 3)
-        self.assertEqual(result, expected_result)
+    def test_not_found(self):
+        file = io.StringIO('а Роза упала на лапу Азора')
+        gen = generator(file, ['роз'])
+        self.assertEqual(list(gen), [])
 
+    def test_empty_file(self):
+        file = io.StringIO('')
+        gen = generator(file, ['роза'])
+        self.assertEqual(list(gen), [])
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_empty_words_list(self):
+        file = io.StringIO('а Роза упала на лапу Азора')
+        gen = generator(file, [])
+        self.assertEqual(list(gen), [])
+
+    def test_words_list_with_empty_string(self):
+        file = io.StringIO('а Роза упала на лапу Азора')
+        gen = generator(file, [''])
+        self.assertEqual(list(gen), [])
+
+    def test_incorrect_file_descriptor(self):
+        file = 23
+        generator(file, ['роза'])
+        self.assertRaises(TypeError, "Expected a different type of variable")
+
+    def test_matching_multiple_filters_in_one_line(self):
+        file = io.StringIO('роза и лапа\nроза алая')
+        gen = generator(file, ['роза', 'лапа'])
+        self.assertEqual(list(gen), ['роза и лапа\n',
+                                     'роза алая'])
+
+    def test_match_filter_and_file_string(self):
+        file = io.StringIO('роза и лапа\nалая')
+        gen = generator(file, ['алая'])
+        self.assertEqual(list(gen), ['алая'])
