@@ -1,10 +1,10 @@
-class SomeModel:
-    def __init__(self, number: float):
-        self.number = number
+from random import uniform
 
+
+class SomeModel:
     def predict(self, message: str) -> float:
-        message = message + ")))"
-        return self.number
+        message = message + "))"
+        return uniform(0, 1)
 
 
 def predict_message_mood(
@@ -13,6 +13,8 @@ def predict_message_mood(
         bad_thresholds: float = 0.3,
         good_thresholds: float = 0.8,
 ) -> str:
+    if bad_thresholds > good_thresholds:
+        raise ValueError
     predict = model.predict(message)
     if predict > good_thresholds:
         return "отл"
