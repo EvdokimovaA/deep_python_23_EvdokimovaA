@@ -1,14 +1,15 @@
 import sys
 import unittest
-from unittest.mock import Mock
+from unittest import mock
 from io import StringIO
+from unittest.mock import call
 
 from json_parser import parse_json, keyword_callback_func
 
 
 class TestParser(unittest.TestCase):
     def setUp(self):
-        self.input_json = '{"key1": "Word1 Word2 word2", "key2": "word2 word3"}'
+        self.input_json = '{"key1": "Word1 Word2 word2 word4", "key2": "word2 word3 word3"}'
         self.required_fields = ["key1", "key2"]
         self.keywords = ["word2"]
 
@@ -34,17 +35,28 @@ class TestParser(unittest.TestCase):
     def test_empty_required_fields(self):
         self.assertIsNone(parse_json(self.input_json, keyword_callback_func, None, self.keywords))
 
-    def test_parse_json_several_matches(self):
-        keyword_callback_mock = Mock()
-        result = parse_json(self.input_json, keyword_callback_mock, self.required_fields, self.keywords)
+    def test_empty_keyword_callback(self):
+        self.assertIsNone(parse_json(self.input_json, None, self.required_fields, self.keywords))
 
-        self.assertEqual(keyword_callback_mock.call_count, 3)
-        self.assertEqual(keyword_callback_mock.call_args[0], ('key2', 'word2'))
-        self.assertEqual(result, '{"key1": "Word1 Word2 word2", "key2": "word2 word3"}')
+    def test_keyword_not_in_any_required_fields(self):
+        with mock.patch('json_parser.keyword_callback_func') as mock_model:
+            parse_json(self.input_json, mock_model, self.required_fields, ["word5"])
+            mock_model.assert_not_called()
+            parse_json(self.input_json, mock_model, self.required_fields, ["word6"])
+            mock_model.assert_not_called()
 
-    def test_parse_json_not_matches(self):
-        keyword_callback_mock = Mock()
-        result = parse_json(self.input_json, keyword_callback_mock, ["Key1"], self.keywords)
+    def test_search_keywords_case_insensitive(self):
+        with mock.patch('json_parser.keyword_callback_func') as mock_model:
+            parse_json(self.input_json, mock_model, self.required_fields, ["WoRd3"])
+            self.assertEqual(mock_model.call_args[0], ('key2', 'word3'))
 
-        self.assertEqual(keyword_callback_mock.call_count, 0)
-        self.assertEqual(result, '{"key1": "Word1 Word2 word2", "key2": "word2 word3"}')
+    def test_matching_several_keywords_in_one_line(self):
+        with mock.patch('json_parser.keyword_callback_func') as mock_model:
+            parse_json(self.input_json, mock_model, self.required_fields, ["word3"])
+            self.assertEqual(mock_model.call_args_list, [call('key2', 'word3'), call('key2', 'word3')])
+
+    def test_with_several_required_fields_and_keywords_found(self):
+        expected_result = [call('key1', 'word2'), call('key1', 'word2'), call('key1', 'word4'), call('key2', 'word2')]
+        with mock.patch('json_parser.keyword_callback_func') as mock_model:
+            parse_json(self.input_json, mock_model, self.required_fields, ["word2", "word4"])
+            self.assertEqual(mock_model.call_args_list, expected_result)

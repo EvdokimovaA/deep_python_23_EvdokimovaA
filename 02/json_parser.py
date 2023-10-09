@@ -5,8 +5,8 @@ def keyword_callback_func(key, word):
     return key, word
 
 
-def parse_json(json_str, keyword_callback, required_fields=None, keywords=None):
-    if not required_fields or not keywords:
+def parse_json(json_str, keyword_callback=None, required_fields=None, keywords=None):
+    if not required_fields or not keywords or not keyword_callback:
         return None
 
     lower_keywords = [i.lower() for i in keywords]
