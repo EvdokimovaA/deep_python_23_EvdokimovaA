@@ -57,3 +57,25 @@ class TestPredictMessage(unittest.TestCase):
 
             self.assertEqual(predict_message_mood('message', self.model), 'норм')
             self.assertEqual(mock_model.call_args.args, ('message',))
+
+    def test_near_edge_case_normal_mood(self):
+        with mock.patch('predict_message.SomeModel.predict') as mock_model:
+            mock_model.return_value = 0.30001
+            self.assertEqual(predict_message_mood('message', self.model), 'норм')
+            self.assertEqual(mock_model.call_args.args, ('message',))
+
+            mock_model.return_value = 0.79999
+            self.assertEqual(predict_message_mood('message', self.model), 'норм')
+            self.assertEqual(mock_model.call_args.args, ('message',))
+
+    def test_near_edge_case_bad_mood(self):
+        with mock.patch('predict_message.SomeModel.predict') as mock_model:
+            mock_model.return_value = 0.29999
+            self.assertEqual(predict_message_mood('message', self.model), 'неуд')
+            self.assertEqual(mock_model.call_args.args, ('message',))
+
+    def test_near_edge_case_good_mood(self):
+        with mock.patch('predict_message.SomeModel.predict') as mock_model:
+            mock_model.return_value = 0.80001
+            self.assertEqual(predict_message_mood('message', self.model), 'отл')
+            self.assertEqual(mock_model.call_args.args, ('message',))
