@@ -5,9 +5,9 @@ from generator import generator, search_match_in_line
 
 class TestGenerator(unittest.TestCase):
     def test_search_match_in_line_true(self):
-        file = io.StringIO('а Роза упала на лапу Азора')
+        file = io.StringIO('а роза упала на лапу Азора')
         result = search_match_in_line(file, set("Роза"))
-        self.assertEqual(list(result), ['а Роза упала на лапу Азора'])
+        self.assertEqual(list(result), ['а роза упала на лапу Азора'])
 
     def test_search_match_in_line_false(self):
         file = io.StringIO('а Роза упала на лапу Азора')

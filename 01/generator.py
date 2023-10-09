@@ -1,6 +1,13 @@
 from io import StringIO
 
 
+def search_match_in_line(file, words_set):
+    for line in file:
+        line_set = set(line.strip().lower().split())
+        if words_set & line_set:
+            yield line
+
+
 def generator(file_descriptor, list_search):
     words_set = set(map(lambda w: w.lower(), list_search))
     if isinstance(file_descriptor, str):
@@ -11,10 +18,3 @@ def generator(file_descriptor, list_search):
         yield from search_match_in_line(file_descriptor, words_set)
     else:
         raise TypeError("Expected a different type of variable")
-
-
-def search_match_in_line(file, words_set):
-    for line in file:
-        line_set = set(line.strip().lower().split())
-        if words_set & line_set:
-            yield line
