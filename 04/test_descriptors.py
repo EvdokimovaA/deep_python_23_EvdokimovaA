@@ -60,16 +60,25 @@ class TestDescriptors(unittest.TestCase):
         human = Human("Valera", 30, 80.3)
         with self.assertRaises(ValueError):
             human.name = 11
+        self.assertEqual(human.name, "Valera")
+        self.assertEqual(human.age, 30)
+        self.assertEqual(human.weight, 80.3)
 
     def test_incorrect_change_age(self):
         human = Human("Valera", 30, 80.3)
         with self.assertRaises(ValueError):
             human.age = 500
+        self.assertEqual(human.name, "Valera")
+        self.assertEqual(human.age, 30)
+        self.assertEqual(human.weight, 80.3)
 
     def test_incorrect_change_weight(self):
         human = Human("Valera", 30, 80.3)
         with self.assertRaises(ValueError):
             human.weight = -1
+        self.assertEqual(human.name, "Valera")
+        self.assertEqual(human.age, 30)
+        self.assertEqual(human.weight, 80.3)
 
     def test_several_instances_of_class_Human(self):
         human1 = Human("Valera", 30, 80.3)
