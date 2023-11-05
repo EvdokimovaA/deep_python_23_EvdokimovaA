@@ -40,3 +40,28 @@ class TestLRUCache(unittest.TestCase):
         self.assertEqual(self.cache.get("k1"), "value1")
         self.assertEqual(self.cache.get("k3"), "val3")
         self.assertEqual(self.cache.get("k2"), None)
+
+    def test_in_task(self):
+        cache = LRUCache(2)
+
+        cache.set("k1", "val1")
+        cache.set("k2", "val2")
+
+        assert cache.get("k3") is None
+        assert cache.get("k2") == "val2"
+        assert cache.get("k1") == "val1"
+
+        cache.set("k3", "val3")
+
+        assert cache.get("k3") == "val3"
+        assert cache.get("k2") is None
+        assert cache.get("k1") == "val1"
+
+    def test_LRU_limit_1(self):
+        cache = LRUCache(1)
+        cache.set("k1", "val1")
+        self.assertEqual(cache.get("k1"), "val1")
+
+        cache.set("k2", "val2")
+        self.assertEqual(cache.get("k2"), "val2")
+        self.assertEqual(cache.get("k1"), None)
