@@ -1,0 +1,25 @@
+2023-11-10 16:08:05,241	loger_cache	INFO	47	Create new element value0 with key 0 in cache
+2023-11-10 16:08:05,241	loger_cache	INFO	47	Create new element value1 with key 1 in cache
+2023-11-10 16:08:05,241	loger_cache	INFO	47	Create new element value2 with key 2 in cache
+2023-11-10 16:08:05,241	loger_cache	INFO	47	Create new element value3 with key 3 in cache
+2023-11-10 16:08:05,242	loger_cache	INFO	47	Create new element value4 with key 4 in cache
+2023-11-10 16:08:05,242	loger_cache	INFO	47	Create new element value5 with key 5 in cache
+2023-11-10 16:08:05,242	loger_cache	INFO	47	Create new element value6 with key 6 in cache
+2023-11-10 16:08:05,242	loger_cache	INFO	47	Create new element value7 with key 7 in cache
+2023-11-10 16:08:05,242	loger_cache	INFO	47	Create new element value8 with key 8 in cache
+2023-11-10 16:08:05,243	loger_cache	INFO	47	Create new element value9 with key 9 in cache
+2023-11-10 16:08:05,243	loger_cache	INFO	47	Create new element value10 with key 10 in cache
+2023-11-10 16:08:05,243	loger_cache	INFO	56	Element value0 with key 0 was removed from cache
+2023-11-10 16:08:05,243	loger_cache	INFO	47	Create new element value11 with key 11 in cache
+2023-11-10 16:08:05,243	loger_cache	INFO	56	Element value1 with key 1 was removed from cache
+2023-11-10 16:08:05,244	loger_cache	INFO	47	Create new element value12 with key 12 in cache
+2023-11-10 16:08:05,244	loger_cache	INFO	56	Element value2 with key 2 was removed from cache
+2023-11-10 16:08:05,244	loger_cache	INFO	47	Create new element value13 with key 13 in cache
+2023-11-10 16:08:05,244	loger_cache	INFO	56	Element value3 with key 3 was removed from cache
+2023-11-10 16:08:05,244	loger_cache	INFO	47	Create new element value14 with key 14 in cache
+2023-11-10 16:08:05,244	loger_cache	INFO	56	Element value4 with key 4 was removed from cache
+2023-11-10 16:08:05,245	loger_cache	INFO	36	Was get element value5 with key 5
+2023-11-10 16:08:05,245	loger_cache	INFO	36	Was get element value6 with key 6
+2023-11-10 16:08:05,245	loger_cache	INFO	36	Was get element value7 with key 7
+2023-11-10 16:08:05,245	loger_cache	INFO	36	Was get element value8 with key 8
+2023-11-10 16:08:05,245	loger_cache	INFO	36	Was get element value9 with key 9
