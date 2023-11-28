@@ -4,26 +4,30 @@ import io
 
 
 def profile_decorator(func):
-    class Wrapper:
+    profiles_dict = {}
 
-        def __init__(self, func):
-            self.func = func
-            self.content = []
+    def wrapper(*args, **kwargs):
 
-        def __call__(self, *args, **kwargs):
-            profile = cProfile.Profile()
-            profile.enable()
-            self.func(*args, **kwargs)
-            profile.disable()
+        if func.__name__ not in profiles_dict:
+            profiles_dict[func.__name__] = cProfile.Profile()
+
+        profile = profiles_dict[func.__name__]
+        profile.enable()
+        result = func(*args, **kwargs)
+        profile.disable()
+
+        return result
+
+    def print_stat():
+        for func_name, profile in profiles_dict.items():
+            print(f"Stats for {func_name}:")
             string = io.StringIO()
             pstat = pstats.Stats(profile, stream=string)
             pstat.print_stats()
-            self.content.append(string.getvalue())
+            print(string.getvalue())
 
-        def print_stat(self):
-            print("\n".join(self.content))
-
-    return Wrapper(func)
+    wrapper.print_stat = print_stat
+    return wrapper
 
 
 @profile_decorator
@@ -39,6 +43,7 @@ def sub(value_a, value_b):
 if __name__ == "__main__":
     add(1, 2)
     add(4, 5)
+    add(5, 5)
     sub(4, 5)
 
     add.print_stat()

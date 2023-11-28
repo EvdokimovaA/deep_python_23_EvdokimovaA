@@ -1,4 +1,8 @@
+import io
+import pstats
 import weakref
+import cProfile
+import time
 from memory_profiler import profile
 
 
@@ -71,9 +75,42 @@ def change_weak(weaks):
 
 if __name__ == "__main__":
     N = 100000
+    profile = cProfile.Profile()
+    profile.enable()
+
+    start_time = time.time()
     list_defaults = create_default(N)
+    end_time = time.time()
+    print(f'Время создания экземпляров DefaultClass: {end_time - start_time}')
+
+    start_time = time.time()
     list_slots = create_slots(N)
+    end_time = time.time()
+    print(f'Время создания экземпляров SlotsClass: {end_time - start_time}')
+
+    start_time = time.time()
     list_weaks = create_weak(N)
+    end_time = time.time()
+    print(f'Время создания экземпляров WeakClass: {end_time - start_time}')
+
+    start_time = time.time()
     change_default(list_defaults)
+    end_time = time.time()
+    print(f'Время изменения экземпляров DefaultClass: {end_time - start_time}')
+
+    start_time = time.time()
     change_slots(list_slots)
+    end_time = time.time()
+    print(f'Время изменения экземпляров SlotsClass: {end_time - start_time}')
+
+    start_time = time.time()
     change_weak(list_weaks)
+    end_time = time.time()
+    print(f'Время изменения экземпляров WeakClass: {end_time - start_time}')
+
+    profile.disable()
+    info = io.StringIO()
+    sort_by = "cumulative"
+    stats = pstats.Stats(profile, stream=info).sort_stats(sort_by)
+    stats.print_stats()
+    print(info.getvalue())
